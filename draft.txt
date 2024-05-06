@@ -1,0 +1,12 @@
+        () => {
+          setFanValue(!fanValue)
+          // const action = fanValue ? "0" : "1"
+          // client.publish("process.env.USERNAME/feeds/fanController", action, { qos: 1 }, (err) => {
+          //   if (err) {
+          //     console.error('Error publishing message:', err);
+          //   } else {
+          //     console.log(`Action completed!`);
+          //     setFanValue(!fanValue)
+          //   }
+          // })
+        }
