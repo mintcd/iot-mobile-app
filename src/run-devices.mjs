@@ -1,7 +1,7 @@
-import AdafruitDataHandler from './AdafruitDataHandler.mjs';
+import Device from './utils/device.mjs';
 
 
-const temperatureSensor = new AdafruitDataHandler(
+const temperatureSensor = new Device(
   'TemperatureSensor',
   ["temperature"],
   [],
@@ -21,24 +21,46 @@ temperatureSensor.setDataPublisher(
     });
   })
 
-temperatureSensor.connect()
+temperatureSensor.work()
+
+const humiditySensor = new Device(
+  'HumiditySensor',
+  ["humidity"],
+  [],
+  "0",
+)
+
+humiditySensor.setDataPublisher(
+  function (feed, valueHandler = undefined) {
+    const topic = `${this.username}/feeds/${feed}`;
+    const publishValue = (Math.floor(Math.random() * 31) + 20).toString()
+    temperatureSensor.client.publish(topic, publishValue, { qos: 1 }, (err) => {
+      if (err) {
+        console.error('Error publishing message:', err);
+      } else {
+        console.log(`Feed: ${feed}. Published: ${publishValue}`);
+      }
+    });
+  })
+
+humiditySensor.work()
 
 
-const fan = new AdafruitDataHandler(
-  'Fan',
+const bulb = new Device(
+  'bulb',
   ['bulb'],
   ["fancontroller"],
   "1",
 )
 
-fan.setMessageHandler((topic, message) => {
+bulb.setMessageHandler((topic, message) => {
   fan.setValue(parseInt(message))
   console.log(`Bulb has been turned: ${fan.value ? "ON" : "OFF"}.`)
 })
 
-fan.connect()
+bulb.work()
 
-const airConditioner = new AdafruitDataHandler(
+const airConditioner = new Device(
   'AirConditioner',
   ['airconditioner'],
   ["airconditionercontroller", "temperature"],
@@ -54,4 +76,4 @@ airConditioner.setMessageHandler((topic, message) => {
   }
 })
 
-airConditioner.connect()
+airConditioner.work()

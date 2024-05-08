@@ -1,17 +1,21 @@
-import mqtt from 'mqtt';
+import createClient from "./createClient.mjs";
+import global from "../global-variables.mjs"
 
-export default class AdafruitDataHandler {
-    constructor(thingName, publishFeeds, subscribeFeeds, initialValue, frequency = 5000) {
-        this.thingName = thingName;
+export default class Device {
+    constructor(deviceName,
+        publishFeeds,
+        subscribeFeeds,
+        initialValue,
+        protocol,
+        frequency) {
+        this.deviceName = deviceName;
         this.value = initialValue !== undefined ? initialValue : "0";
         this.receivedMessage = "";
-        this.frequency = frequency === undefined ? 5000 : frequency
+        this.frequency = frequency === undefined ? 7000 : frequency
 
-        this.username = process.env.USERNAME;
-        this.password = process.env.PASSWORD;
-        this.uri = `tcp://io.adafruit.com:1883`;
+        this.protocol
 
-        this.client = null;
+        this.client = createClient(this.protocol);
         this.publishFeeds = Array.isArray(publishFeeds) ? publishFeeds : [publishFeeds];
         this.subscribeFeeds = Array.isArray(subscribeFeeds) ? subscribeFeeds : [subscribeFeeds];
 
@@ -19,16 +23,10 @@ export default class AdafruitDataHandler {
         this.messageHandler = this.defaultMessageHandler;
     }
 
-    connect() {
-        const options = {
-            username: this.username,
-            password: this.password,
-        };
-
-        this.client = mqtt.connect(this.uri, options);
-
+    work() {
         this.client.on('connect', () => {
-            console.log('Connected to Adafruit MQTT broker');
+
+            console.log(`${this.deviceName} connected successfully as ${global.username}.`);
 
             this.subscribeFeeds.forEach(feed => {
                 const subscribeTopic = `${this.username}/feeds/${feed}`;
@@ -47,16 +45,17 @@ export default class AdafruitDataHandler {
                         this.dataPublisher(feed);
                     }
                 });
-            }, 7000);
+            }, this.frequency);
         });
 
         this.client.on('message', (topic, message) => {
             this.messageHandler(topic, message);
         });
 
-        this.client.on('error', (error) => {
-            console.error('Error:', error);
-        });
+        this.client.on("error", () => {
+            console.log("Error connection.");
+        })
+
     }
 
     setValue(value) {

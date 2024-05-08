@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
-import 'dotenv/config'
-
-import { PiFanFill } from "react-icons/pi";
-
 import { FaTemperatureEmpty, FaTemperatureHalf, FaTemperatureFull } from "react-icons/fa6";
 import { TbAirConditioningDisabled, TbAirConditioning } from "react-icons/tb";
 import { FaLightbulb } from "react-icons/fa";
+
+import createClient from './utils/createClient.mjs';
+import global from './global-variables.mjs';
 
 import mqtt from 'mqtt';
 
@@ -33,15 +32,15 @@ export default function App() {
   }
 
   useEffect(() => {
-    const username = process.env.USERNAME;
-    const password = process.env.PASSWORD;
+    const username = global.username;
+    const password = global.password;
 
     const options = {
       username: username,
       password: password,
     };
 
-    const uri = process.env.WS_URI;
+    const uri = global.ws_uri;
     const subscribeFeeds = ['fan', 'temperature'];
     const client = mqtt.connect(uri, options);
 
@@ -70,11 +69,15 @@ export default function App() {
 
   }, []);
 
-  const uri = `ws://io.adafruit.com:443`;
+  const username = global.username;
+  const password = global.password;
+
   const options = {
-    username: process.env.USERNAME,
-    password: process.env.PASSWORD,
+    username: username,
+    password: password,
   };
+
+  const uri = global.ws_uri;
   const client = mqtt.connect(uri, options);
 
   function fanButtonHandler() {

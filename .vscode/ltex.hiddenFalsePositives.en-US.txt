@@ -1,0 +1,2 @@
+{"rule":"TO_NON_BASE","sentence":"^\\QThe UI client subscribes to feeds temperature, humidity,\\E$"}
+{"rule":"TO_NON_BASE","sentence":"^\\QThe UI client subscribes to feeds temperature, humidity, bulb and air-conditioner.\\E$"}
