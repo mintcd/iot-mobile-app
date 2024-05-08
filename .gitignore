@@ -1,0 +1,58 @@
+report/*.aux
+report/*.bbl
+report/*.bcf
+report/*.blg
+report/*.fdb_latexmk
+report/*.fls
+report/*.idx
+report/*.ilg
+report/*.ind
+report/*.lof
+report/*.log
+report/*.toc
+report/*.run.xml
+report/*.synctex.gz
+
+report/sections/*.aux
+
+.vscode
+src/.vscode
+src/global-variables.mjs
+
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+src/node_modules/
+
+# Expo
+src/.expo/
+src/dist/
+src/web-build/
+
+# Native
+src/*.orig.*
+src/*.jks
+src/*.p8
+src/*.p12
+src/*.key
+src/*.mobileprovision
+
+# Metro
+src/.metro-health-check*
+
+# debug
+src/npm-debug.*
+src/yarn-debug.*
+src/yarn-error.*
+
+# macOS
+src/.DS_Store
+src/*.pem
+
+# local env files
+src/.env*.local
+
+# typescript
+src/*.tsbuildinfo
+
+
